@@ -46,24 +46,18 @@ services:
     build:
       context: ./nginx
       dockerfile: Dockerfile.dev
-    volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
-    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+      network: host
+      args:
+        - CERTBOT_EMAIL=nhockrong98@gmail.com
+        - DOMAIN_LIST=library-mern.tk
     ports:
-      - 80:80
-      - 443:443
-    networks:
-      - library-mern-api
-  certbot:
-    image: certbot/certbot
-    container_name: certbot-mern
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+      - "80:80"
+      - "443:443"
     volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+      - letsencrypt:/etc/letsencrypt
     networks:
       - library-mern-api
+
 networks:
   library-mern-api:
     driver: bridge
