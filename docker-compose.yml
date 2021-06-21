@@ -6,7 +6,7 @@ services:
     restart: always
     build:
       context: ./server
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: server-mern
     volumes:
       - /app/node_modules
@@ -45,7 +45,7 @@ services:
       - client
     build:
       context: ./nginx
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
       network: host
       args:
         - CERTBOT_EMAIL=nhockrong98@gmail.com
@@ -53,14 +53,9 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    # volumes:
-    #   - /etc/letsencrypt:/etc/letsencrypt
     networks:
       - library-mern-api
 
 networks:
   library-mern-api:
     driver: bridge
-# volumes:
-#   mongodb-data:
-#     driver: local
